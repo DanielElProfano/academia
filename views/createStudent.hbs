@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<head>
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <div>
+        <a href="/">Ir a Inicio</a>
+    </div>
+
+    <h1>
+        Crear nueva alumno
+    </h1>
+    <form method="POST" action="/student/create" enctype="multipart/form-data">
+        <div>
+            <span>Name: </span>
+            <input name="name" type="text">
+        </div>
+
+        <div>
+            <span>Education</span>
+            <input name="education" type="checkbox" label="Education">
+        </div>
+
+        <div>
+            <span>Image</span>
+            <input name="image" type="file" accept="image/png, image/jpg">
+        </div>
+
+        <div>
+            <span>Gender</span>
+            <select name="gender">
+                <option value="M">
+                    M
+                </option>
+                <option value="F">
+                    F
+                </option>
+                <option value="U">
+                    U
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <span>Breed</span>
+            <input name="breed" type="text">
+        </div>
+
+        <div>
+            <span>color</span>
+            <input name="color" type="text">
+        </div>
+
+        <div>
+            <span>age</span>
+            <input name="age" type="number">
+        </div>
+
+        <div>
+            <span>pedigree</span>
+            <input name="pedigree" type="checkbox">
+        </div>
+
+        
+        <div>
+            <span>size</span>
+            <input name="size" type="text">
+        </div>
+
+
+        <button type="submit">
+            Crear Pet
+        </button>
+    </form>
+
+</body>
+
+</html>
