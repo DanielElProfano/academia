@@ -35,6 +35,10 @@ const professorSchema = new Schema(
             default: 'professor',
             required: true
         },
+        education: {
+            type: [String],
+            required: true,
+        },
         subjetcs: [{
             type: mongoose.Types.ObjectId,
             ref: 'Subject'

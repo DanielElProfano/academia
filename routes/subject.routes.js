@@ -37,9 +37,23 @@ router.get('/show', async(req, res, next) =>{
     }
 })
 router.get('/subjects', async(req, res, next) => {  //muestra todos las asignaturas de un curso.
-    const id = req.query.id;
+    try{
+    const id = req.query.id; //id del curso al que pertenecen las asignaturas.
     const subjects = await Subject.find({course: id});
-    return res.json(subjects);
+    return res.status(200).render('modifyCourse', { subjects , id});
+    }catch(error){
+        next(error);
+    }
+})
+
+router.get('/:id/delete', async(req, res, next) => {  //borra asignaturs de un curso pasado por Id y vuelve a renderizar la pantalla
+
+    const id = req.params.id;
+    const idCourse = req.query.id;
+    await Subject.findByIdAndDelete(id);
+    return res.redirect('/subject/subjects?id=' + idCourse);
+    
+
 })
 
 

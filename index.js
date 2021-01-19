@@ -16,9 +16,10 @@ server.use(express.urlencoded({ extended: true }));
 
 const courseRouter = require('./routes/course.routes');
 const subjectRouter = require('./routes/subject.routes');
+const professorRouter = require('./routes/professor.routes');
 
 
-
+server.use('/professor', professorRouter);
 server.use('/course', courseRouter);
 server.use('/subject', subjectRouter);
 
