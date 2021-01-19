@@ -37,7 +37,7 @@ const studentSchema = new Schema(
         },
         subjects: [{
             type: mongoose.Types.ObjectId,
-            ref: 'Subject'
+            ref: 'Subjects'
 
         }]
         
@@ -46,5 +46,5 @@ const studentSchema = new Schema(
 
 );
 
-const Student = mongoose.model('students', studentSchema); 
+const Student = mongoose.model('Students', studentSchema); 
 module.exports = Student;

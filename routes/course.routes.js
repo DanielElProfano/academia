@@ -16,9 +16,12 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
     res.status(201).redirect("/subject?" + "name="+addCourse.name +"&id=" + addCourse._id)
 })
 
-router.get('/', (req, res, next) => {
+router.get('/', async(req, res, next) => {
 
-        return res.status(200).render('createCourse');
+        const prueba = await Course.find().populate('SubjectS');
+        console.log(prueba)
+
+        // return res.status(200).render('createCourse');
 })
 
 router.get('/show', async (req, res, next) =>{

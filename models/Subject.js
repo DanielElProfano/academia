@@ -13,11 +13,11 @@ const SubjectSquema = new Schema({
     },
     students: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Student',
+        ref: 'Students',
     }],
     professors: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Professor'
+        ref: 'Professors'
     }]
 },
 

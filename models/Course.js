@@ -8,7 +8,7 @@ const courseSquema = new Schema({
     },
     subjects: [{
        type: mongoose.Types.ObjectId,
-        ref: 'Subject',
+        ref: 'Subjects',
     }],
  },
     {timestamps : true}

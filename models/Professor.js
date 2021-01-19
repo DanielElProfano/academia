@@ -41,7 +41,7 @@ const professorSchema = new Schema(
         },
         subjetcs: [{
             type: mongoose.Types.ObjectId,
-            ref: 'Subject'
+            ref: 'Subjects'
 
         }]
         
@@ -50,5 +50,5 @@ const professorSchema = new Schema(
 
 );
 
-const Professor = mongoose.model('professor', professorSchema); 
+const Professor = mongoose.model('Professor', professorSchema); 
 module.exports = Professor;
