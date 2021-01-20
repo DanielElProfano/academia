@@ -1,5 +1,6 @@
 const express = require('express');
 const Professor = require('../models/Professor');
+const Subject = require('../models/Subject');
 const router = express.Router();
 
 router.get('/', async(req, res, next) => {
@@ -29,14 +30,16 @@ router.get('/choose', async(req, res, next) => { //inscribe en el curso todos lo
     try{
         const { id, name } = req.query
         let hasProfessor = false;
-        const professors = await Professor.find({education : name});
-        if(professors.length){
+        const professors = await Professor.find({education : name}); //busca todos los profesores que dan la asignatura pasada en NAME
+     
+        console.log(professors)
+           if(professors.length){
             hasProfessor = true
         }
         professors.forEach(element => { 
-            element._doc = {...element._doc, hola : name}
+            element._doc = {...element._doc, subject : name, idSubject : id}
             })
-         res.status(200).render('addSubjectToProfessor', {professors, hasProfessor, id , subjectName: name});   
+         res.status(200).render('addSubjectToProfessor', {professors, hasProfessor});   
         }
         
     catch(error){
@@ -45,9 +48,9 @@ router.get('/choose', async(req, res, next) => { //inscribe en el curso todos lo
 })
 router.get('/addsubject', async(req, res, next) => {
     try{
-        console.log("hola")
-        const {id, name } = req.query;
-        const professors = await Professor.updateMany({education : name},{$push: {subjetcs: id}})
+        const {idProf, idSub, name } = req.query;
+        const professors = await Professor.findByIdAndUpdate(idProf,{$addToSet: {subjects: idSub}}).populate('subjects');
+        const addProfessorToSubject = await Subject.findByIdAndUpdate(idSub, {$addToSet:{professors: idProf}})
         res.json(professors);
     }catch(error){
         next(error);

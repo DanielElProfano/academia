@@ -8,11 +8,11 @@ const courseSquema = new Schema({
     },
     subjects: [{
        type: mongoose.Types.ObjectId,
-        ref: 'Subjects',
+        ref: 'subjects',
     }],
  },
     {timestamps : true}
  )
 
-const Course = mongoose.model('Course', courseSquema); 
+const Course = mongoose.model('courses', courseSquema); 
 module.exports = Course;

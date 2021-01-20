@@ -1,0 +1,34 @@
+   <h1>Todas los alumnos</h1>
+   <table>
+        <tr>
+            <th>Name</th>
+            <th>Lastname</th>
+            <th>Mail</th>
+            <th>Age</th>
+            <th>Course</th>
+            <th>Modify</th>
+            <th>Delete</th>
+        </tr>
+
+        {{#each allStudents}}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ lastName }}</td>
+            <td>{{ mail }}</td>
+            <td>{{ age }}</td>
+            <td>{{#each courses }}
+                {{name}}
+
+                {{/each}}
+            </td>
+            <td><a href="/student/{{this._id}}/modify"><img src="/images/bin-button.png" width="15">modify</a></td>
+            <td><a href="/student/{{this._id}}/delete"><img src="/images/bin-button.png" width="15">detele</a></td>
+
+            <td><a href="/subject/subjects?id={{this._id}}">Show subjects</a></td>
+            <td><a href="/course/{{this._id}}/delete"><img src="/images/bin-button.png" width="15">detele</a></td>
+            <td><a href="/course/modify">Modify</a></td>
+
+        </tr>
+        {{/each}}
+
+    </table>

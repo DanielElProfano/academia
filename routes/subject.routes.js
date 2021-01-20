@@ -1,8 +1,9 @@
 const express= require('express');
-const Subject = require('../models/Subject')
+const Subject = require('../models/Subject');
+const Course = require('../models/Course');
 const router = express.Router();
 
-router.get ('/', async(req, res, next) => { //recogera el nombre del curso. y lo desplegara en la pag.
+router.get ('/', async(req, res, next) => { //recogera el nombre del curso. y la ID y lo desplegara en la pag.
     const { name , id } = req.query;
     return res.status(200).render('createSubject', { name, id });
 })
@@ -10,7 +11,8 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
     try{
         let array = [];
 
-        const id = req.query.id
+        const id = req.query.id  //Id del curso
+        
         const { name, students, professors } = req.body
         const newSubject = new Subject({
             course : id,
@@ -19,6 +21,9 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
             professors : professors ? professors : []
         })
         const addSubject = await newSubject.save();
+
+        const addSubjectToCourse = await Course.findByIdAndUpdate(id, 
+                {$push: { subjects: addSubject._id}}); //pushea en el array subjects del modelo COURSE la asignatura.
         return res.status(201).render('createSubject', 
             {
                 title : "Create subject",
@@ -28,6 +33,7 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
         next(error);
     }
 })
+
 router.get('/show', async(req, res, next) =>{
     try{
         const subjects = await Subject.find();
@@ -36,7 +42,7 @@ router.get('/show', async(req, res, next) =>{
         next(error);
     }
 })
-router.get('/subjects', async(req, res, next) => {  //muestra todos las asignaturas de un curso.
+router.get('/subjects', async(req, res, next) => {  //muestra todos las asignaturas de un curso pasando la ID por Query param
     try{
     const id = req.query.id; //id del curso al que pertenecen las asignaturas.
     const subjects = await Subject.find({course: id});

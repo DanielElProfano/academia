@@ -17,20 +17,13 @@ server.use(express.urlencoded({ extended: true }));
 const courseRouter = require('./routes/course.routes');
 const subjectRouter = require('./routes/subject.routes');
 const professorRouter = require('./routes/professor.routes');
+const studentRouter = require('./routes/student.routes');
 
 
 server.use('/professor', professorRouter);
 server.use('/course', courseRouter);
 server.use('/subject', subjectRouter);
-
-// server.use('/', async(req, res, next) => {
-
-//     const find = await Course.find().populate('Subjects');
-//     console.log(find);
-    
-//     res.send(find);
-//   });
-
+server.use('/student', studentRouter);
 
 
 server.listen(PORT, () => {

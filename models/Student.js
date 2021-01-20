@@ -35,9 +35,9 @@ const studentSchema = new Schema(
             default: 'default',
             required: true
         },
-        subjects: [{
+        courses: [{
             type: mongoose.Types.ObjectId,
-            ref: 'Subjects'
+            ref: 'courses'
 
         }]
         
@@ -46,5 +46,5 @@ const studentSchema = new Schema(
 
 );
 
-const Student = mongoose.model('Students', studentSchema); 
+const Student = mongoose.model('students', studentSchema); 
 module.exports = Student;

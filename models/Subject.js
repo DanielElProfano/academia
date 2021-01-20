@@ -13,11 +13,11 @@ const SubjectSquema = new Schema({
     },
     students: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Students',
+        ref: 'students',
     }],
     professors: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Professors'
+        ref: 'professors'
     }]
 },
 
@@ -27,5 +27,5 @@ const SubjectSquema = new Schema({
 )
 
 
-const Subject = mongoose.model('Subjects', SubjectSquema); 
+const Subject = mongoose.model('subjects', SubjectSquema); 
 module.exports = Subject;
