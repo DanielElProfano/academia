@@ -1,5 +1,5 @@
 const express = require('express');
-
+const passport = require('passport');
 const Student = require('../models/Student');
 const Course = require('../models/Course')
 
@@ -11,22 +11,21 @@ router.get('/', async(req, res, next) => {
 });
 
 router.post('/create', async(req, res, async) =>{
-    const {name, lastName, mail, password, age, courses} = req.body;
-    const newStudent = new Student({
-            name,
-            lastName,
-            mail,
-            password,
-            age,
-            courses
-    })
+
+
+    passport.authenticate('registerStudent', (error, user) => {
+        if(error){
+            return res.render('createStudent', {error});
+        }
+        req.logIn(user, (error) => {
+            if(error){
+                return res.render('createProfessor', {error: error.message});
+            }
+            return res.redirect("/course");
+        })
    
-    const student = await newStudent.save()
-    const std = await Student.findById(student._id).populate('courses');
-    const allStudents = await Student.find().populate('courses');
-    console.log(allStudents)
-    return res.status(201).render('showStudents', { std, allStudents});
-    
+    })(req);
+ 
 })
 
 module.exports = router;

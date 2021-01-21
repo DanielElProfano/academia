@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const Professor = require('../models/Professor');
 const Subject = require('../models/Subject');
 const router = express.Router();
@@ -8,21 +9,22 @@ router.get('/', async(req, res, next) => {
 
 })
 
-router.post('/create', async(req, res, next) => {
-    const {name, lastName, photo, mail, education, age, password } = req.body;
+router.post('/create', (req, res, next) => {
 
-   const newProfessor = new Professor({
-        name,
-        lastName,
-        photo,
-        mail,
-        education,
-        age,
-        password
-   });
+    passport.authenticate('registerProfessor', (error, user) => {
+        if(error){
+            return res.render('createProfessor', {error});
+        }
+        req.logIn(user, (error) => {
+            if(error){
+                return res.render('createProfessor', {error: error.message});
+            }
+            
+        })
+        return res.redirect("/course");
 
-   const addProfessor = await newProfessor.save();
-   return res.json(addProfessor)   
+    })(req, res, next);
+
     
 })
 
@@ -57,15 +59,5 @@ router.get('/addsubject', async(req, res, next) => {
     }
 
 })
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
