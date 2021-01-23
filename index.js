@@ -46,7 +46,8 @@ const professorRouter = require('./routes/professor.routes');
 const studentRouter = require('./routes/student.routes');
 const indexRouter = require('./routes/login.routes');
 
-server.use('/professor',[isAuthenticated.isAuthenticated], professorRouter);
+// server.use('/professor',[isAuthenticated.isAuthenticated, isAuthenticated.isAdmin], professorRouter);
+server.use('/professor', professorRouter);
 server.use('/course', [isAuthenticated.isAuthenticated], courseRouter);
 server.use('/subject', subjectRouter);
 server.use('/student', studentRouter);

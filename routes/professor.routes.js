@@ -2,14 +2,17 @@ const express = require('express');
 const passport = require('passport');
 const Professor = require('../models/Professor');
 const Subject = require('../models/Subject');
+const mongoose = require('mongoose');
 const router = express.Router();
+const fileMiddleware = require('../middleware/file.middleware');
+const { find } = require('../models/Subject');
 
 router.get('/', async(req, res, next) => {
     res.status(200).render('createProfessor')
 
 })
 
-router.post('/create', (req, res, next) => {
+router.post('/create', [fileMiddleware.upload.single('photo')],(req, res, next) => {
 
     passport.authenticate('registerProfessor', (error, user) => {
         if(error){
@@ -21,7 +24,7 @@ router.post('/create', (req, res, next) => {
             }
             
         })
-        return res.redirect("/course");
+        return res.redirect("/professor/show");
 
     })(req, res, next);
 
@@ -59,5 +62,84 @@ router.get('/addsubject', async(req, res, next) => {
     }
 
 })
+router.get('/show', async(req, res, next) => {
+    try{
+        const allProfessors = await Professor.find().populate('subjects');
+        res.status(200).render('professor/showProfessors', { allProfessors });
+    }catch(error){
+        next(error);
+    }
+});
+router.get('/:id/modify/', async(req, res, next) => {
+ 
+    try{
+        const id = req.params.id;
+        const professor = await Professor.findById(id).populate('courses');
+        res.status(200).render('professor/modifyProfessor', { professor });
+
+    }catch(error){
+        next(error);
+    }
+})
+router.post('/:id/modify/', [fileMiddleware.upload.single('photo')], async(req, res, next) => {
+    
+    try{
+        const {name, lastName, mail, age } = req.query;
+        console.log(req.body)
+        const id = req.params.id;
+     
+        const student = await Professor.findByIdAndUpdate(id, req.body,
+        {new : true});
+        res.status(200).redirect('/professor/show');
+
+    }catch(error){
+        next(error);
+    }
+})
+router.get('/:id/delete', async(req, res, next) => {
+    try{
+        const id = req.params.id
+        await Professor.findByIdAndDelete(id);
+        const response = await Subject.find({ professors : id }).lean()  // subjects
+
+        response.forEach(async element => {
+    
+            const idSubjectToDelete = JSON.stringify(element._id); //consigo el id de la asignatura que imparte
+            const IdSubject = idSubjectToDelete.slice(1,idSubjectToDelete.length-1); //casteo para que sea válido el ID
+            const ObjectID = mongoose.Types.ObjectId(IdSubject); //construyo el objeto ID
+            console.log(IdSubject)
+            
+                const deleteSubject = await Subject.updateOne(
+                    {_id : element._id }, 
+                    {$pull:{professors : id}}, 
+                    {new: true})     
+                
+    
+            })
+        
+    
+       return res.redirect('/course/show');
+    
+        }catch(error){
+            next(error);
+        }
+    })
+
+router.get('/meet', async(req, res, next) => { //hacer un findONEbyID
+    try{
+        const showSubjects = await Professor.findOne().populate('subjects').lean();  //veo todas las asignaturas que imparto.
+        if(showSubjects){
+            // const { subjects } = showSubjects.subjects;
+            showSubjects.subjects.forEach(element => {
+                
+                console.log(JSON.stringify(element.course));
+            })
+        }
+        res.json(showSubjects)
+    }catch(error){
+        next(error);
+    }
+})   
+
 
 module.exports = router;

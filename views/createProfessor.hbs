@@ -1,5 +1,4 @@
 
-
 <head>
     <title>{{ title }}</title>
 </head>
@@ -12,24 +11,23 @@
     <h1>
         Crear nueva mascota
     </h1>
-    <form method="POST" action="/professor/create">
+    <form method="POST" action="/professor/create" enctype="multipart/form-data">
         <label>
             <span>Name: </span>
             <input name="name" type="text">
         </label>
         <label>
-            <span>Photo: </span>
-            <input name="photo" type="text">
-        </label>
-
-        <label>
             <span>Lastname</span>
             <input name="lastName" type="text">
         </label>
-
+            <div>
+        <label>
+            <span>Image</span>
+            <input name="photo" type="file" accept="image/png, image/jpg, image/jpeg">
+        </label>
         <label>
             <span>Mail</span>
-            <input name="mail" type="text" accept="image/png, image/jpg">
+            <input name="mail" type="text">
         </label>
         <label>
             <span>Subjects</span>

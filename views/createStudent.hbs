@@ -11,7 +11,7 @@
     <h1>
         Crear nueva alumno
     </h1>
-     <form action="/student/create" method="POST">
+     <form action="/student/create" method="POST" enctype="multipart/form-data">
       <label>
             <span>Name: </span>
             <input name="name" type="text">
@@ -19,6 +19,10 @@
          <label>
             <span>lastName</span>
              <input name="lastName" type="text">
+        </label>
+          <label>
+            <span>Image</span>
+            <input name="photo" type="file" accept="image/png, image/jpg, image/jpeg">
         </label>
 
         <label>

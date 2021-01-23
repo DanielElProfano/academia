@@ -12,7 +12,8 @@ const isAdmin = (req, res, next) => {
     if(req.user.rol === 'admin') {
         return next();
     } else {
-        return res.redirect('/');
+        const error = new Error('No tiene permisos de Administrador')
+        return res.status(403).render('error', { error });
     }
 }
 const isProfessor = (req, res, next) => {

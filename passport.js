@@ -35,7 +35,6 @@ passport.use(
         async(req, mail, password, done) => {
             try {
                 const {name, lastName, photo, mail, education, age, password } = req.body;
-                console.log(req.body)
                 // mandar algo por el body para saber si viene del Student o de Professor
                 let existUser = await Professor.findOne({ mail : mail});
                 if(existUser){
@@ -48,7 +47,7 @@ passport.use(
                 const newProfessor = new Professor({
                             name,
                             lastName,
-                            photo,
+                            photo: req.file? `/uploads/${req.file.filename}` : null,
                             mail,
                             education,
                             age,
@@ -74,7 +73,7 @@ passport.use(
         async(req, mail, password, done) => {
             try {
                 const {name, lastName, mail, password, age, courses} = req.body;
-                console.log(req.body)
+             
                 // mandar algo por el body para saber si viene del Student o de Professor
                 let existUser = await Student.findOne({ mail : mail});
                 if(existUser){
@@ -89,10 +88,12 @@ passport.use(
                             lastName,
                             mail,
                             age,
+                            photo: req.file? `/uploads/${req.file.filename}` : null,
                             password: hash,
                             courses
                        });
                 const saveUser = await newStudent.save();
+                console.log(saveUser);
                 done(null, saveUser);
             }
             catch(error){
