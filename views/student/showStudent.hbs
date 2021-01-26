@@ -5,6 +5,7 @@
             <th>Image</th>
             <th>Name</th>
             <th>Lastname</th>
+            <th>Course</th>
             <th>Mail</th>
             <th>Age</th>
             <th>faltas</th>
@@ -15,6 +16,12 @@
             <td><img src="{{ student.photo }}" width="100px"></td>
             <td>{{ student.name }}</td>
             <td>{{ student.lastName }}</td>
+            <td>{{#each student.courses }}
+                <ul>
+                  <li>{{ name }}</li>
+                </ul>
+                {{/each}}
+            </td>
             <td>{{ student.mail }}</td>
             <td>{{ student.age }}</td>
             <td>{{#each student.faltas }}
@@ -25,7 +32,6 @@
             </td>
             <td><a href="/utils/{{this._id}}/mail"><img src="/images/email-button.png" width="15">Send mail</a></td>
         </tr>
-    
-
+  
     </table>
  

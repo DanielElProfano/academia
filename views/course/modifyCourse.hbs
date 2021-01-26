@@ -3,42 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/index.css">
     <title>Document</title>
 </head>
 
-<h2>Subject from course: </h2>
+<h2>Subject from course: {{ course.name }}</h2>
  <table>
         <tr>
             <th>Name</th>
-            <th>course</th>
             <th>Teachers</th>
             <th>Delete</th>
-            <th>Modify</th>
-           
             <th>Add professor</th>
         </tr>
         
         {{#each subjects}}
         <tr>
             <td>{{ name }}</td>
-            <td>course pending</td>
+           
             <td>{{#each professors }}
                {{ this.name }}|/|
                 {{/each }}
             </td>
             <td><a href="/subject/{{this._id}}/delete?id={{ course }}"><img src="/images/bin-button.png" width="15">detele</a></td>
-            <td><a href="/course/modify">Modify</a></td>
             <td><a href="/professor/choose?id={{ this._id }}&name={{ name }}">Choose</a></td>
 
         </tr>
      
         {{/each}}
-           <a href="/course/addsubject/{{ id }}">Add</a>
+          
  
     </table>
 
        
-    {{#if hasProfessor}}
+    {{!-- {{#if hasProfessor}}
         <h2> List of professors of {{ this.subjectName }}</h2>
         {{#each professors}}
             <h1>Name: {{ name }} Lastname: </h1>
@@ -46,7 +43,7 @@
         {{/each}}
     {{else}}
         <h3>There's any professor to {{ name }} </h3>
-    {{/if}}
+    {{/if}} --}}
         
     
 </body>

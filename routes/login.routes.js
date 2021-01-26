@@ -4,9 +4,6 @@ const Professor = require('../models/Professor');
 const Subject = require('../models/Subject');
 const router = express.Router();
 
-
-
-
 router.get('/logout', (req, res, next) => {
     if(req.user){
             req.logout();
@@ -23,7 +20,6 @@ router.get('/', async (req, res, next) =>{
 })
 
 router.post('/check', (req, res, next) => {
-    console.log(req.body)
     passport.authenticate('login', (error, user) => {
         if(error) {
             return res.render('login', { error: error.message });
@@ -37,9 +33,8 @@ router.post('/check', (req, res, next) => {
             if(user.rol === 'default'){
                 return res.redirect(`/student/${user._id}`)
             }
-            
-         
-        });
+            return res.render('admin/admin', { user })
+      });
     })(req);
 });
 

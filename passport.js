@@ -46,13 +46,14 @@ passport.use(
                         return done(error);
                     }
                 }
-
+                const image = req.file_url || null;
                 const hash = await bcrypt.hash(password, saltRounds);
 
                 const newProfessor = new Professor({
                             name,
                             lastName,
-                            photo: req.file? `/uploads/${req.file.filename}` : null,
+                            // photo: req.file? `/uploads/${req.file.filename}` : null,
+                            photo : image,
                             mail,
                             education,
                             age,
@@ -90,7 +91,7 @@ passport.use(
                         return done(error);
                     }
                 }
-                
+                const image = req.file_url || null;
                 const hash = await bcrypt.hash(password, saltRounds);
 
                 const newStudent = new Student({
@@ -98,7 +99,8 @@ passport.use(
                             lastName,
                             mail,
                             age,
-                            photo: req.file? `/uploads/${req.file.filename}` : null,
+                            // photo: req.file? `/uploads/${req.file.filename}` : null,
+                            photo : image,
                             password: hash,
                             courses
                        });
@@ -114,7 +116,7 @@ passport.use(
           }
         )
     );
-    passport.use(
+    passport.use(   //login
         'login',
         new LocalStrategy(
           {

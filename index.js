@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 require('./db')
 const Course = require('./models/Course');
@@ -5,7 +6,7 @@ const Subject = require('./models/Subject')
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const server = express();
 
 const passport = require('passport');
@@ -22,11 +23,11 @@ server.use(express.urlencoded({ extended: true }));
 
 server.use(
   session({
-    secret: 'upgradehub_node', // ¡Este secreto tendremos que cambiarlo en producción!
-    resave: false, // Solo guardará la sesión si hay cambios en ella.
-    saveUninitialized: false, // Lo usaremos como false debido a que gestionamos nuestra sesión con Passport
+    secret: process.env.SECRET_SESSION,
+    resave: false,
+    saveUninitialized: false, 
     cookie: {
-      maxAge: 3600000 // Milisegundos de duración de nuestra cookie, en este caso será una hora.
+      maxAge: 3600000 
     },
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
@@ -48,16 +49,14 @@ const indexRouter = require('./routes/login.routes');
 const utilsRouter = require('./routes/utils.routes');
 
 // server.use('/professor',[isAuthenticated.isAuthenticated, isAuthenticated.isAdmin], professorRouter);
-server.use('/professor', professorRouter);
+server.use('/professor', [isAuthenticated.isAuthenticated], professorRouter);
 server.use('/course', [isAuthenticated.isAuthenticated], courseRouter);
-server.use('/subject', subjectRouter);
-server.use('/student', studentRouter);
+server.use('/subject', [isAuthenticated.isAuthenticated], subjectRouter);
+server.use('/student', [isAuthenticated.isAuthenticated], studentRouter);
 server.use('/login', indexRouter);
-server.use('/utils', utilsRouter)
+server.use('/utils', [isAuthenticated.isAuthenticated], utilsRouter)
 
 
 server.listen(PORT, () => {
   console.log(`Server running in http://localhost:${PORT}`);
- 
-
 });

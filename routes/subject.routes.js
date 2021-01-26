@@ -47,8 +47,8 @@ router.get('/subjects', async(req, res, next) => {  //muestra todos las asignatu
     try{
     const id = req.query.id; //id del curso al que pertenecen las asignaturas.
     const subjects = await Subject.find({course: id}).populate('professors');
-    // res.json(subjects)
-    return res.status(200).render('modifyCourse', { subjects , id});
+    const course = await Course.findById(id);
+    return res.status(200).render('course/modifyCourse', { subjects , id, course});
     }catch(error){
         next(error);
     }

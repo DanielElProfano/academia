@@ -1,5 +1,8 @@
 const multer = require('multer');
 const path = require('path');
+require('dotenv').config();
+const fs = require('fs')
+const cloudinary = require('cloudinary').v2;
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -27,6 +30,40 @@ const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
           fieldSize: 500000000,
         },
       });
+    // const uploadImage = async(req, res, next) =>{
+    //   if(req.file){
+    //     const filePath = req.file.path;
+    //     const image = await cloudinary.uploader.upload(filePath);
+    //     await fs.unlinkSync(filePath);
+    //     req.file_url = image.secure_url;
+    //     return(next);
+    //   }else{
+    //     return(next);
+    //   }
+    // }
+    const uploadImage = async(req, res, next) => {    
+      if(req.file) {
+          const filePath = req.file.path;
+          const image = await cloudinary.uploader.upload(filePath);
+          /**
+           * Primero subimos la imagen a nuestro servidor con multer
+           * Una vez subida, la enviamos a Cloudinary y este nos devuelve
+           * la url de nuestra imagen. Cuando obtenemos la url, borramos
+           * la imagen de nuestro servidor.
+           */
+          await fs.unlinkSync(filePath);
+  
+          req.file_url = image.secure_url;
+  
+          /**
+           * Continuamos ejecutando nuestro controller
+           */
+          return next();
+      } else {
+          return next();
+      }
+  }
+  
       
 
-module.exports = { upload };
+module.exports = { upload, uploadImage };

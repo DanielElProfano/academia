@@ -8,7 +8,6 @@ const isAuthenticated = (req, res, next) => {
 
 }
 const isAdmin = (req, res, next) => {
-    // console.log(req.passport);
     if(req.user.rol === 'admin') {
         return next();
     } else {
@@ -17,24 +16,26 @@ const isAdmin = (req, res, next) => {
     }
 }
 const isProfessor = (req, res, next) => {
-    // console.log(req.passport);
-    if(req.user.rol === 'professor') {
+    const { rol } = req.user;
+    if(rol === 'professor' || rol === 'admin') {
         return next();
     } else {
-        return res.redirect('/');
+        const error = new Error('No tiene permisos');
+        return res.status(403).render('error', { error });
     }
 }
 const isStudent = (req, res, next) => {
-    // console.log(req.passport);
-    if(req.user.rol === 'default') {
+    const { rol } = req.user;
+    if(rol === 'student' || rol === 'admin'){
         return next();
     } else {
         return res.redirect('/');
     }
 }
 
-
 module.exports = {
     isAuthenticated,
-    isAdmin
+    isAdmin,
+    isProfessor,
+    isStudent
 }
