@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const fileMiddleware = require('../middleware/file.middleware');
 const { find } = require('../models/Subject');
+const Student = require('../models/Student');
+const Course = require('../models/Course');
 
 router.get('/', async(req, res, next) => {
     res.status(200).render('createProfessor')
@@ -127,19 +129,48 @@ router.get('/:id/delete', async(req, res, next) => {
 
 router.get('/meet', async(req, res, next) => { //hacer un findONEbyID
     try{
-        const showSubjects = await Professor.findOne().populate('subjects').lean();  //veo todas las asignaturas que imparto.
-        if(showSubjects){
-            // const { subjects } = showSubjects.subjects;
-            showSubjects.subjects.forEach(element => {
-                
-                console.log(JSON.stringify(element.course));
-            })
-        }
-        res.json(showSubjects)
+        const id = req.query.id;
+        const allStudents = await Student.find({courses : id}).populate('courses');
+        res.json(allStudents)
+        // res.render('professor/showStudentsByCourse', { allStudents });
     }catch(error){
         next(error);
     }
-})   
+})
+router.get('/:id/students', async(req, res, next) => { //revibe el id del profesor
+    try{
+        const array = [];
+        const idProf = req.params.id;
+        const professor = await Professor.findById(idProf);
+        const students = false; //para no mostrar el campo de estudiantes
+        const allSubjects = await Subject.find({professors : idProf }).distinct('course').lean();
+
+        allSubjects.forEach(async element => {
+            const course = await Course.findById(element._id);
+            array.push(course)
+        })
+        return res.status(200).render('professor/showCourses', { array, professor, students });
+    }catch(error){
+        next(error);
+    }
+})
+router.post('/:id/allstudents', async (req, res, next) => {
+    const idProf = req.params.id;
+    const id = req.body.id;
+    const students = true;
+    const allStudents = await Student.find({ courses: id}).populate('courses');
+    return res.status(200).render('professor/showCourses', { allStudents, students, idProf })
+})
+
+router.get('/allstudents', async (req, res, next) => {
+    const { id, idProf } = req.query;
+    
+    const students = true;
+    const allStudents = await Student.find({ courses: id}).populate('courses');
+    return res.status(200).render('professor/showCourses', { allStudents, students , idProf})
+})
+
+
 
 
 module.exports = router;

@@ -12,6 +12,7 @@
 
         {{#each allStudents}}
         <tr>
+            <td> <img src="{{ photo }}" width="100px"></td>
             <td>{{ name }}</td>
             <td>{{ lastName }}</td>
             <td>{{ mail }}</td>
@@ -21,7 +22,7 @@
 
                 {{/each}}
             </td>
-            <img src="{{ photo }}" width="100px">
+           
             <td><a href="/student/{{this._id}}/modify"><img src="/images/bin-button.png" width="15">modify</a></td>
             <td><a href="/student/{{this._id}}/delete"><img src="/images/bin-button.png" width="15">detele</a></td>
         </tr>

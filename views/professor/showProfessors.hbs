@@ -7,9 +7,9 @@
             <th>Mail</th>
             <th>Age</th>
             <th>Course</th>
-            <th>Education</th>
             <th>Modify</th>
             <th>Delete</th>
+            <th>Show</th>
         </tr>
 
         {{#each allProfessors}}
@@ -25,8 +25,9 @@
                 {{/each}}
             </td>
          
-            <td><a href="/professor/{{this._id}}/modify"><img src="/images/bin-button.png" width="15">modify</a></td>
+            <td><a href="/professor/{{this._id}}/modify"><img src="" width="15">modify</a></td>
             <td><a href="/professor/{{this._id}}/delete"><img src="/images/bin-button.png" width="15">detele</a></td>
+            <td><a href="/professor/{{this._id}}/students"><img src="" width="15">Show students</a></td>
         </tr>
         {{/each}}
 

@@ -1,6 +1,7 @@
 const express= require('express');
 const Subject = require('../models/Subject');
 const Course = require('../models/Course');
+const mongoose = require('mongoose');
 const router = express.Router();
 
 router.get ('/', async(req, res, next) => { //recogera el nombre del curso. y la ID y lo desplegara en la pag.
@@ -45,7 +46,8 @@ router.get('/show', async(req, res, next) =>{
 router.get('/subjects', async(req, res, next) => {  //muestra todos las asignaturas de un curso pasando la ID por Query param
     try{
     const id = req.query.id; //id del curso al que pertenecen las asignaturas.
-    const subjects = await Subject.find({course: id});
+    const subjects = await Subject.find({course: id}).populate('professors');
+    // res.json(subjects)
     return res.status(200).render('modifyCourse', { subjects , id});
     }catch(error){
         next(error);
@@ -53,14 +55,30 @@ router.get('/subjects', async(req, res, next) => {  //muestra todos las asignatu
 })
 
 router.get('/:id/delete', async(req, res, next) => {  //borra asignaturs de un curso pasado por Id y vuelve a renderizar la pantalla
-
-    const id = req.params.id;
-    const idCourse = req.query.id;
-    await Subject.findByIdAndDelete(id);
-    return res.redirect('/subject/subjects?id=' + idCourse);
-    
-
+    try{
+        const id = req.params.id;
+        const idCourse = req.query.id;
+        await Subject.findByIdAndDelete(id);
+        const ObjectID = mongoose.Types.ObjectId(id);
+        const deleteCourse = await Course.updateOne(
+            {_id : idCourse},
+            {$pull: {subjects : ObjectID}},
+            {new: true})
+        return res.redirect('/subject/subjects?id=' + idCourse);
+    }catch(error){
+        next(error);
+    }
 })
+router.get('/exam', async(req, res, next) => {  //borra asignaturs de un curso pasado por Id y vuelve a renderizar la pantalla
+    try{
+        const id = req.query.id;
+        const allSubjects = await Course.findById(id).populate('subjects').populate('students');
+        res.json(allSubjects)
+    }catch(error){
+        next(error);
+    }
+})
+
 
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
-
+const Course = require('./models/Course');
 const Professor = require('./models/Professor');
 const Student = require('./models/Student');
 
@@ -35,11 +35,16 @@ passport.use(
         async(req, mail, password, done) => {
             try {
                 const {name, lastName, photo, mail, education, age, password } = req.body;
-                // mandar algo por el body para saber si viene del Student o de Professor
                 let existUser = await Professor.findOne({ mail : mail});
                 if(existUser){
                     const error = new Error('Ya existe el usuario');
                     return done(error);
+                }else{
+                    existUser = await Student.findOne({ mail : mail});
+                    if(existUser){
+                        const error = new Error('Ya existe el usuario');
+                        return done(error);
+                    }
                 }
 
                 const hash = await bcrypt.hash(password, saltRounds);
@@ -73,14 +78,19 @@ passport.use(
         async(req, mail, password, done) => {
             try {
                 const {name, lastName, mail, password, age, courses} = req.body;
-             
-                // mandar algo por el body para saber si viene del Student o de Professor
+               // mandar algo por el body para saber si viene del Student o de Professor
                 let existUser = await Student.findOne({ mail : mail});
                 if(existUser){
-                    const error = new Error('Ya existe el usuario');
+                    throw new Error('Ya existe el usuario');
                     return done(error);
+                }else{
+                    existUser = await Professor.findOne({ mail : mail});
+                    if(existUser){
+                        const error = new Error('Ya existe el usuario');
+                        return done(error);
+                    }
                 }
-
+                
                 const hash = await bcrypt.hash(password, saltRounds);
 
                 const newStudent = new Student({
@@ -92,8 +102,10 @@ passport.use(
                             password: hash,
                             courses
                        });
-                const saveUser = await newStudent.save();
-                console.log(saveUser);
+                const saveUser = await newStudent.save()
+                
+                const addStudentToCourse = await Course.findByIdAndUpdate(courses,{$push: {students: saveUser._id}})
+              
                 done(null, saveUser);
             }
             catch(error){

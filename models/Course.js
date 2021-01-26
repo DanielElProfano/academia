@@ -10,6 +10,10 @@ const courseSquema = new Schema({
        type: mongoose.Types.ObjectId,
         ref: 'subjects',
     }],
+    students: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'students',
+    }],
  },
     {timestamps : true}
  )
