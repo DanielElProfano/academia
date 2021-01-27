@@ -3,6 +3,7 @@ const Subject = require('../models/Subject');
 const Course = require('../models/Course');
 const mongoose = require('mongoose');
 const router = express.Router();
+const auth = require('../middleware/authenticated.middleware');
 
 router.get ('/', async(req, res, next) => { //recogera el nombre del curso. y la ID y lo desplegara en la pag.
     const { name , id } = req.query;
@@ -54,7 +55,7 @@ router.get('/subjects', async(req, res, next) => {  //muestra todos las asignatu
     }
 })
 
-router.get('/:id/delete', async(req, res, next) => {  //borra asignaturs de un curso pasado por Id y vuelve a renderizar la pantalla
+router.get('/:id/delete', async(req, res, next) => {  //borra asignaturas de un curso pasado por Id y vuelve a renderizar la pantalla
     try{
         const id = req.params.id;
         const idCourse = req.query.id;
@@ -76,6 +77,17 @@ router.get('/exam', async(req, res, next) => {  //borra asignaturs de un curso p
         res.json(allSubjects)
     }catch(error){
         next(error);
+    }
+})
+
+router.get('/test', [auth.isProfessor], async(req, res, next) =>{
+    try{
+        idCourse = req.query.id;
+        const course = await Course.findById(id).populate('subject');
+        
+
+    }catch(error){
+        next(error)
     }
 })
 

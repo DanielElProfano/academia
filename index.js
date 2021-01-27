@@ -48,13 +48,12 @@ const studentRouter = require('./routes/student.routes');
 const indexRouter = require('./routes/login.routes');
 const utilsRouter = require('./routes/utils.routes');
 
-// server.use('/professor',[isAuthenticated.isAuthenticated, isAuthenticated.isAdmin], professorRouter);
 server.use('/professor', [isAuthenticated.isAuthenticated], professorRouter);
 server.use('/course', [isAuthenticated.isAuthenticated], courseRouter);
 server.use('/subject', [isAuthenticated.isAuthenticated], subjectRouter);
 server.use('/student', [isAuthenticated.isAuthenticated], studentRouter);
 server.use('/login', indexRouter);
-server.use('/utils', [isAuthenticated.isAuthenticated], utilsRouter)
+server.use('/utils', [isAuthenticated.isAuthenticated], utilsRouter);
 
 
 server.listen(PORT, () => {

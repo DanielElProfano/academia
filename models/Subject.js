@@ -18,6 +18,10 @@ const SubjectSquema = new Schema({
     professors: [{
         type: mongoose.Types.ObjectId,
         ref: 'professors'
+    }],
+    test:[{
+        type: mongoose.Types.ObjectId,
+        ref: 'test'
     }]
 },
 

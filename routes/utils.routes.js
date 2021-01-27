@@ -1,9 +1,13 @@
 const express= require('express');
+require('dotenv').config();
 const Student = require('../models/Student')
 const Course = require('../models/Course');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const Professor = require('../models/Professor');
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken)
 
 router.get('/:id/mailform', async(req, res, next) => {
     try{
@@ -47,5 +51,17 @@ router.post('/mail/:course/:id', async(req, res, next) => {
     return res.redirect(`/professor/allstudents/?id=${ id }&idProf=${ idProf }`)
 
 })
+router.get('/sms', async(req, res, next) => {
+   
+    client.messages.create
+        ({
+            body: 'Hi there!', 
+            from: '+18186865971', 
+            to: '+686558335'
+        })
+        .then(message => console.log(message.sid));
+        
+})
+
 
 module.exports = router;

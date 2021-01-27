@@ -4,9 +4,8 @@ const isAuthenticated = (req, res, next) => {
     }else{
         return res.redirect('/login');
     }
-
-
 }
+
 const isAdmin = (req, res, next) => {
     if(req.user.rol === 'admin') {
         return next();

@@ -16,16 +16,10 @@ router.get('/', [auth.isAdmin], async(req, res, next) => {
 })
 
 router.post('/create', [auth.isAdmin, fileMiddleware.upload.single('photo'), fileMiddleware.uploadImage],async(req, res, next) => {
-
     passport.authenticate('registerProfessor', (error, user) => {
         if(error){
             return res.render('createProfessor', {error});
         }
-        req.logIn(user, (error) => {
-            if(error){
-                return res.render('professor/createProfessor', {error: error.message});
-            }
-        })
         return res.redirect("/professor/show");
     })(req, res, next);
 })
@@ -106,7 +100,7 @@ router.get('/:id/delete',[auth.isAdmin], async(req, res, next) => {
                     {$pull:{professors : id}}, 
                     {new: true})     
             })
-        return res.redirect('/course/show');
+        return res.redirect('/professor/show');
         }catch(error){
             next(error);
         }
@@ -129,8 +123,8 @@ router.get('/:id/students', async(req, res, next) => { //recibe el id del profes
     }
 })
 
-router.post('/:id/allstudents', async (req, res, next) => {
-    const idProf = req.params.id;
+router.post('/:id/allstudents', async (req, res, next) => {    //muestra todos los alumnos de un curso
+    const idProf = req.params.id;                               //impartido por el profesr
     const id = req.body.id;
     const students = true;
     const allStudents = await Student.find({ courses: id}).populate('courses');
@@ -144,6 +138,7 @@ router.get('/allstudents', async (req, res, next) => {
     const allStudents = await Student.find({ courses: id}).populate('courses');
     return res.status(200).render('professor/showCourses', { allStudents, students , idProf})
 })
+
 
 
 
