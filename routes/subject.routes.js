@@ -7,14 +7,12 @@ const auth = require('../middleware/authenticated.middleware');
 
 router.get ('/', async(req, res, next) => { //recogera el nombre del curso. y la ID y lo desplegara en la pag.
     const { name , id } = req.query;
-    return res.status(200).render('createSubject', { name, id });
+    return res.status(200).render('subject/createSubject', { name, id });
 })
 router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curso existente
     try{
         let array = [];
-
         const id = req.query.id  //Id del curso
-        
         const { name, students, professors } = req.body
         const newSubject = new Subject({
             course : id,
@@ -23,14 +21,9 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
             professors : professors ? professors : []
         })
         const addSubject = await newSubject.save();
-
         const addSubjectToCourse = await Course.findByIdAndUpdate(id, 
                 {$push: { subjects: addSubject._id}}); //pushea en el array subjects del modelo COURSE la asignatura.
-        return res.status(201).render('createSubject', 
-            {
-                title : "Create subject",
-                id
-            })
+        return res.status(201).render('subject/createSubject') 
     }catch(error){
         next(error);
     }
@@ -39,17 +32,17 @@ router.post('/create', async(req, res, next) =>{ //asignar asigmaturas a un curs
 router.get('/show', async(req, res, next) =>{
     try{
         const subjects = await Subject.find();
-        return res.status(200).render('showSubjects', { subjects })
+        return res.status(200).render('subject/showSubjects', { subjects })
     }catch(error){
         next(error);
     }
 })
 router.get('/subjects', async(req, res, next) => {  //muestra todos las asignaturas de un curso pasando la ID por Query param
     try{
-    const id = req.query.id; //id del curso al que pertenecen las asignaturas.
-    const subjects = await Subject.find({course: id}).populate('professors');
-    const course = await Course.findById(id);
-    return res.status(200).render('course/modifyCourse', { subjects , id, course});
+        const id = req.query.id; //id del curso al que pertenecen las asignaturas.
+        const subjects = await Subject.find({course: id}).populate('professors');
+        const course = await Course.findById(id);
+        return res.status(200).render('course/modifyCourse', { subjects , id, course});
     }catch(error){
         next(error);
     }
@@ -84,8 +77,6 @@ router.get('/test', [auth.isProfessor], async(req, res, next) =>{
     try{
         idCourse = req.query.id;
         const course = await Course.findById(id).populate('subject');
-        
-
     }catch(error){
         next(error)
     }

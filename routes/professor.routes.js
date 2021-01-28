@@ -35,7 +35,7 @@ router.get('/choose', [auth.isAdmin], async(req, res, next) => { //inscribe en e
         professors.forEach(element => { 
             element._doc = {...element._doc, subject : name, idSubject : id}
             })
-         res.status(200).render('addSubjectToProfessor', {professors, hasProfessor});   
+         res.status(200).render('professor/addSubjectToProfessor', {professors, hasProfessor});   
         }
     catch(error){
         next(error);

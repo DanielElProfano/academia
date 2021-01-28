@@ -20,6 +20,7 @@ router.get('/:id/mailform', async(req, res, next) => {
         next(error);
     }
 });
+
 router.post('/mail/:course/:id', async(req, res, next) => {
     const { from, to, subject, text } = req.body;
     const id = req.params.course;
@@ -49,19 +50,20 @@ router.post('/mail/:course/:id', async(req, res, next) => {
         }
     });
     return res.redirect(`/professor/allstudents/?id=${ id }&idProf=${ idProf }`)
-
 })
+
 router.get('/sms', async(req, res, next) => {
-   
     client.messages.create
         ({
-            body: 'Hi there!', 
+            body: 'Hola jóvenes', 
             from: '+18186865971', 
-            to: '+686558335'
+            to: '+34686558335'
         })
-        .then(message => console.log(message.sid));
-        
+        .then(message => { 
+            console.log(message.sid)
+            return res.render('')})
+        .catch((err) => console.log(err))
+    
 })
-
 
 module.exports = router;
